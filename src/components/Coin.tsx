@@ -1,5 +1,12 @@
+import { Mobile, PC } from "../styles/MediaQuery";
+
 function Coin() {
-	return <div>Coin</div>;
+	return (
+		<>
+			<PC></PC>
+			<Mobile></Mobile>
+		</>
+	);
 }
 
 export default Coin;
