@@ -5,8 +5,8 @@ export const theme: DefaultTheme = {
 	white: "#fffff",
 	orange: "#ff9332",
 	gray: {
-		darker: "#f2f2f2",
+		darker: "#a6a6a6",
 		normal: "#cccccc",
-		lighter: "#a6a6a6",
+		lighter: "#f2f2f2",
 	},
 };
