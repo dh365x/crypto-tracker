@@ -34,15 +34,27 @@ const Desc = styled.div`
 
 const StatsList = styled.div`
 	display: flex;
-	justify-content: center;
-	width: 100%;
-	height: 120px;
-	padding-bottom: 20px;
+	justify-content: space-around;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	width: 90%;
+	height: 95px;
 	div {
 		width: 30%;
-		margin: 0 10px;
+		padding: 10px;
 		border-radius: 10px;
-		background-color: lightgray;
+		background-color: ${(props) => props.theme.gray.lighter};
+	}
+	p {
+		padding: 10px;
+		margin-bottom: 5px;
+		color: #4c4c4c;
+		font-weight: 300;
+	}
+	span {
+		font-size: 22px;
+		font-weight: 700;
+		padding-left: 10px;
 	}
 `;
 
@@ -164,13 +176,36 @@ function Coins() {
 	}, []);
 
 	const formatCurrency = (value: number) => {
-		const billion = 1000000000;
+		const billion: number = 1000000000;
 		if (value >= billion) {
-			const bValue = value / billion;
+			const bValue: number = value / billion;
 			return `${bValue.toFixed(1)}B`;
 		}
 		return value.toLocaleString();
 	};
+
+	const makeMarketCap = () => {
+		const arr: number[] = coins.map((coin) => coin.marketCap);
+		const sum: number = arr.reduce((acc, curr) => acc + curr, 0);
+		return sum;
+	};
+	const totalMarketCap = makeMarketCap();
+
+	const makeVolume24h = () => {
+		const arr: number[] = coins.map((coin) => coin.volume);
+		const sum: number = arr.reduce((acc, curr) => acc + curr, 0);
+		return sum;
+	};
+	const totalVolume24h = makeVolume24h();
+
+	const findBtcMarketCap = () => {
+		const pickBtc: ICoin | undefined = coins.find(
+			(coin) => coin.id === "bitcoin"
+		);
+		const percent: number = (Number(pickBtc?.marketCap) / totalMarketCap) * 100;
+		return percent;
+	};
+	const btcDominance = findBtcMarketCap();
 
 	return (
 		<>
@@ -194,9 +229,18 @@ function Coins() {
 						</Container>
 						<Container>
 							<StatsList>
-								<div></div>
-								<div></div>
-								<div></div>
+								<div>
+									<p>Market Cap</p>
+									<span>${totalMarketCap.toLocaleString()}</span>
+								</div>
+								<div>
+									<p>Volume 24h</p>
+									<span>${totalVolume24h.toLocaleString()}</span>
+								</div>
+								<div>
+									<p>BTC Dominance</p>
+									<span>{btcDominance.toFixed(1)}%</span>
+								</div>
 							</StatsList>
 						</Container>
 						<Container>
