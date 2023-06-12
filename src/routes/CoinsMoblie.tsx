@@ -1,10 +1,8 @@
 import styled from "styled-components";
-import { Mobile, PC } from "../styles/MediaQuery";
-import CoinsMoblie from "./CoinsMoblie";
 
 const Wrapper = styled.div`
 	margin-top: 25px;
-	padding: 0 230px;
+	padding: 10px;
 `;
 
 const Container = styled.div`
@@ -12,18 +10,20 @@ const Container = styled.div`
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 10px 0;
 	color: #4c4c4c;
 `;
 
 const Title = styled.h1`
 	padding: 10px;
-	font-size: 36px;
+	font-size: 32px;
 	font-weight: 700;
+	line-height: 1.2;
+	text-align: center;
 `;
 
 const Desc = styled.div`
 	padding: 10px;
+	margin-bottom: 30px;
 	text-align: center;
 	font-size: 18px;
 	font-weight: 300;
@@ -31,21 +31,21 @@ const Desc = styled.div`
 `;
 
 const StatsList = styled.div`
-	display: flex;
-	justify-content: center;
 	width: 100%;
-	height: 120px;
 	padding-bottom: 20px;
 	div {
-		width: 30%;
-		margin: 0 10px;
+		width: 100%;
+		height: 95px;
+		margin: 10px 0;
 		border-radius: 10px;
-		background-color: lightgray;
+		border: 1px solid lightgray;
 	}
 `;
 
 const Table = styled.table`
 	width: 100%;
+	padding-left: 10px;
+	padding-right: 10px;
 	border: 1px solid #e5e5e5;
 	border-radius: 10px;
 	border-spacing: 10px;
@@ -73,13 +73,14 @@ const Table = styled.table`
 		text-align: right;
 	}
 	.fontStyle {
+		font-size: 15px;
 		font-weight: 500;
 	}
 	#rank {
 		width: 60px;
 	}
 	#name {
-		font-size: 18px;
+		font-size: 15px;
 		font-weight: 500;
 		span:nth-child(2) {
 			font-weight: 400;
@@ -88,7 +89,7 @@ const Table = styled.table`
 	}
 `;
 
-function Coins() {
+function CoinsMoblie() {
 	const coins = [
 		{
 			id: "bitcoin",
@@ -126,70 +127,59 @@ function Coins() {
 
 	return (
 		<>
-			<PC>
-				<Wrapper>
-					<Container>
-						<Title>Best Coin Price Tracker on the Market</Title>
-						<Desc>
-							<p>
-								With CoinStats, you can manage all your crypto assets from one
-								interface.
-							</p>
-							<p>
-								The global crypto market cap is ₩1408.3T a 0.54 % increase over
-								the last day.
-							</p>
-						</Desc>
-					</Container>
-					<Container>
-						<StatsList>
-							<div></div>
-							<div></div>
-							<div></div>
-						</StatsList>
-					</Container>
-					<Container>
-						<Table>
-							<thead>
-								<tr>
-									<th>#</th>
-									<th className="leftAlign">Name</th>
-									<th className="rightAlign">Change (24h)</th>
-									<th className="rightAlign">Price</th>
-									<th>Price in BTC</th>
-									<th>Market Cap</th>
-									<th>Volume 24h</th>
+			<Wrapper>
+				<Container>
+					<Title>Best Coin Price Tracker on the Market</Title>
+					<Desc>
+						<p>
+							With CoinStats, you can manage all your crypto assets from one
+							interface.
+						</p>
+						<p>
+							The global crypto market cap is ₩1408.3T a 0.54 % increase over
+							the last day.
+						</p>
+					</Desc>
+				</Container>
+				<Container>
+					<StatsList>
+						<div></div>
+						<div></div>
+						<div></div>
+					</StatsList>
+				</Container>
+				<Container>
+					<Table>
+						<thead>
+							<tr>
+								<th className="leftAlign">#</th>
+								<th className="leftAlign">Name</th>
+								<th className="rightAlign">Change (24h)</th>
+								<th className="rightAlign">Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							{coins.map((coin) => (
+								<tr key={coin.id}>
+									<td id="rank">{coin.rank}</td>
+									<td id="name" className="leftAlign">
+										<span>{coin.name}</span>
+										<span> • {coin.symbol}</span>
+									</td>
+									<td id="percentChange24h" className="rightAlign">
+										<span className="fontStyle">{coin.priceChange1d}</span>
+									</td>
+									<td id="price" className="rightAlign">
+										<span className="fontStyle">₩{coin.price}</span>
+									</td>
 								</tr>
-							</thead>
-							<tbody>
-								{coins.map((coin) => (
-									<tr key={coin.id}>
-										<td id="rank">{coin.rank}</td>
-										<td id="name" className="leftAlign">
-											<span>{coin.name}</span>
-											<span> • {coin.symbol}</span>
-										</td>
-										<td id="percentChange24h" className="rightAlign">
-											<span className="fontStyle">{coin.priceChange1d}</span>
-										</td>
-										<td id="price" className="rightAlign">
-											<span className="fontStyle">₩{coin.price}</span>
-										</td>
-										<td id="bitcoinPrice">{coin.priceBtc}</td>
-										<td id="marketCap">₩{coin.marketCap}</td>
-										<td id="volume24h">₩{coin.volume}</td>
-									</tr>
-								))}
-							</tbody>
-						</Table>
-					</Container>
-				</Wrapper>
-			</PC>
-			<Mobile>
-				<CoinsMoblie />
-			</Mobile>
+							))}
+						</tbody>
+					</Table>
+				</Container>
+			</Wrapper>
 		</>
 	);
 }
 
-export default Coins;
+export default CoinsMoblie;
