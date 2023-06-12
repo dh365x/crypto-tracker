@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Mobile, PC } from "../styles/MediaQuery";
 import CoinsMoblie from "./CoinsMoblie";
 import { useEffect, useState } from "react";
+import { UpDownArrow } from "../assets/Svgs";
 
 const Wrapper = styled.div`
 	margin-top: 25px;
@@ -105,6 +106,25 @@ const Table = styled.table`
 	}
 `;
 
+const Change24h = styled.div<{ percent: number }>`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 70px;
+	height: 35px;
+	border-radius: 10px;
+	background-color: ${(props) =>
+		props.percent > 0 ? "rgba(52, 199, 89, 0.1)" : "rgba(255, 53, 53, 0.1)"};
+	color: ${(props) => (props.percent > 0 ? "#34b349" : "#f02934")};
+	font-weight: 500;
+	svg {
+		width: 10px;
+		margin-right: 5px;
+		transform: rotate(${(props) => (props.percent > 0 ? "null" : "180deg")});
+		fill: ${(props) => (props.percent > 0 ? "#34b349" : "#f02934")};
+	}
+`;
+
 interface ICoin {
 	id: string;
 	icon: string;
@@ -130,7 +150,7 @@ function Coins() {
 		const fetchData = async () => {
 			try {
 				const response = await fetch(
-					`https://api.coinstats.app/public/v1/coins?skip=0&limit=10`
+					`https://api.coinstats.app/public/v1/coins?skip=0&limit=30`
 				);
 				const json = await response.json();
 				setCoins(json.coins);
@@ -142,6 +162,15 @@ function Coins() {
 		};
 		fetchData();
 	}, []);
+
+	const formatCurrency = (value: number) => {
+		const billion = 1000000000;
+		if (value >= billion) {
+			const bValue = value / billion;
+			return `${bValue.toFixed(1)}B`;
+		}
+		return value.toLocaleString();
+	};
 
 	return (
 		<>
@@ -158,8 +187,8 @@ function Coins() {
 									interface.
 								</p>
 								<p>
-									The global crypto market cap is ₩1408.3T a 0.54 % increase
-									over the last day.
+									The global crypto market cap is $1.1T a 0.02 % increase over
+									the last day.
 								</p>
 							</Desc>
 						</Container>
@@ -176,7 +205,7 @@ function Coins() {
 									<tr>
 										<th className="leftAlign">#</th>
 										<th className="leftAlign">Name</th>
-										<th className="rightAlign">Change (24h)</th>
+										<th className="leftAlign">Change (24h)</th>
 										<th className="rightAlign">Price</th>
 										<th>Price in BTC</th>
 										<th>Market Cap</th>
@@ -194,15 +223,20 @@ function Coins() {
 													<span> • {coin.symbol}</span>
 												</div>
 											</td>
-											<td id="percentChange24h" className="rightAlign">
-												<span className="fontStyle">{coin.priceChange1d}</span>
+											<td id="percentChange24h" className="leftAlign">
+												<Change24h percent={coin.priceChange1d}>
+													<UpDownArrow />
+													{coin.priceChange1d}
+												</Change24h>
 											</td>
 											<td id="price" className="rightAlign">
-												<span className="fontStyle">₩{coin.price}</span>
+												<span className="fontStyle">
+													${formatCurrency(coin.price)}
+												</span>
 											</td>
-											<td id="bitcoinPrice">{coin.priceBtc}</td>
-											<td id="marketCap">₩{coin.marketCap}</td>
-											<td id="volume24h">₩{coin.volume}</td>
+											<td id="bitcoinPrice">{coin.priceBtc.toFixed(7)}</td>
+											<td id="marketCap">${formatCurrency(coin.marketCap)}</td>
+											<td id="volume24h">${formatCurrency(coin.volume)}</td>
 										</tr>
 									))}
 								</tbody>
