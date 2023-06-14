@@ -75,10 +75,10 @@ function Header() {
 					</Link>
 				</Logo>
 				<Link to="/">
-					<Item>CryptocurrenciesLink</Item>
+					<Item>Cryptocurrencies</Item>
 				</Link>
 				<Item>
-					<Link to="/blog">Blog</Link>
+					<Link to="/">Blog</Link>
 				</Item>
 			</Container>
 			<Container>
@@ -91,10 +91,10 @@ function Header() {
 				<Item>
 					<SettingSvg />
 				</Item>
-				<Link to="/login">
+				<Link to="/">
 					<Item>Login</Item>
 				</Link>
-				<Link to="/join">
+				<Link to="/">
 					<Item
 						style={{
 							display: "flex",

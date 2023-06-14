@@ -3,6 +3,7 @@ import { Mobile, PC } from "../styles/MediaQuery";
 import CoinsMoblie from "./CoinsMoblie";
 import { useEffect, useState } from "react";
 import { UpDownArrow } from "../assets/Svgs";
+import { Link } from "react-router-dom";
 
 const Wrapper = styled.div`
 	margin-top: 25px;
@@ -71,6 +72,7 @@ const Table = styled.table`
 	border-collapse: separate;
 	padding: 0 10px;
 	text-align: center;
+
 	thead {
 		display: table-call;
 		vertical-align: middle;
@@ -261,11 +263,23 @@ function Coins() {
 										<tr key={coin.id}>
 											<td id="rank">{coin.rank}</td>
 											<td id="name" className="leftAlign">
-												<div className="vAlign">
-													<img src={`${coin.icon}`} alt="" />
-													<span>{coin.name}</span>
-													<span> • {coin.symbol}</span>
-												</div>
+												<Link
+													to={{
+														pathname: `/${coin.id}`,
+														state: {
+															name: coin.name,
+															rank: coin.rank,
+															icon: coin.icon,
+															symbol: coin.symbol,
+														},
+													}}
+												>
+													<div className="vAlign">
+														<img src={`${coin.icon}`} alt="" />
+														<span>{coin.name}</span>
+														<span> • {coin.symbol}</span>
+													</div>
+												</Link>
 											</td>
 											<td id="percentChange24h" className="leftAlign">
 												<Change24h percent={coin.priceChange1d}>
