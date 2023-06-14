@@ -1,6 +1,8 @@
 import { useLocation, useParams } from "react-router-dom";
 import { Mobile, PC } from "../styles/MediaQuery";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import { ICoin, formatCurrency } from "./Coins";
 
 const Wrapper = styled.div`
 	margin: 0 auto;
@@ -82,11 +84,35 @@ interface RouteState {
 	rank: number;
 	icon: string;
 	symbol: string;
+	price: number;
 }
 
 function Coin() {
+	const [coin, setCoin] = useState<ICoin>();
+	const [loading, setLoading] = useState(true);
+
 	const { coinId } = useParams<RouteParams>();
 	const { state } = useLocation<RouteState>();
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await fetch(
+					`https://api.coinstats.app/public/v1/coins/bitcoin?currency=AMD`
+				);
+				const json = await response.json();
+				setCoin(json.coin);
+			} catch (error) {
+				console.log("Error fetching data:", error);
+			}
+			setLoading(false);
+		};
+		fetchData();
+	}, [coinId]);
+
+	const marketCap = formatCurrency(state.price * Number(coin?.availableSupply));
+	const FDValue = formatCurrency(state.price * Number(coin?.totalSupply));
+	const volume = formatCurrency(Number(coin?.volume));
 
 	return (
 		<>
@@ -103,26 +129,32 @@ function Coin() {
 						</div>
 					</Header>
 					<Container>
-						<MarketBox>
-							<span>Market Cap</span>
-							<p>$505B</p>
-						</MarketBox>
-						<MarketBox>
-							<span>Fully Diluted Valuation</span>
-							<p>$546B</p>
-						</MarketBox>
-						<MarketBox>
-							<span>Circulating Supply</span>
-							<p>19,401,668</p>
-						</MarketBox>
-						<MarketBox>
-							<span>Total Supply</span>
-							<p>21,000,000</p>
-						</MarketBox>
-						<MarketBox>
-							<span>Volume 24h</span>
-							<p>$49B</p>
-						</MarketBox>
+						{loading ? (
+							<span>Loading...</span>
+						) : (
+							<>
+								<MarketBox>
+									<span>Market Cap</span>
+									<p>${marketCap}</p>
+								</MarketBox>
+								<MarketBox>
+									<span>Fully Diluted Valuation</span>
+									<p>${FDValue}</p>
+								</MarketBox>
+								<MarketBox>
+									<span>Circulating Supply</span>
+									<p>{coin?.availableSupply}</p>
+								</MarketBox>
+								<MarketBox>
+									<span>Total Supply</span>
+									<p>{coin?.totalSupply}</p>
+								</MarketBox>
+								<MarketBox>
+									<span>Volume</span>
+									<p>{volume}</p>
+								</MarketBox>
+							</>
+						)}
 					</Container>
 				</Wrapper>
 			</PC>

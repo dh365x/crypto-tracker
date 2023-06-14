@@ -139,7 +139,7 @@ const Change24h = styled.div<{ percent: number }>`
 	}
 `;
 
-interface ICoin {
+export interface ICoin {
 	id: string;
 	icon: string;
 	name: string;
@@ -155,6 +155,15 @@ interface ICoin {
 	priceChange1d: number;
 	priceChange1w: number;
 }
+
+export const formatCurrency = (value: number) => {
+	const billion: number = 1000000000;
+	if (value >= billion) {
+		const bValue: number = value / billion;
+		return `${bValue.toFixed(1)}B`;
+	}
+	return value.toLocaleString();
+};
 
 function Coins() {
 	const [coins, setCoins] = useState<ICoin[]>([]);
@@ -176,15 +185,6 @@ function Coins() {
 		};
 		fetchData();
 	}, []);
-
-	const formatCurrency = (value: number) => {
-		const billion: number = 1000000000;
-		if (value >= billion) {
-			const bValue: number = value / billion;
-			return `${bValue.toFixed(1)}B`;
-		}
-		return value.toLocaleString();
-	};
 
 	const makeMarketCap = () => {
 		const arr: number[] = coins.map((coin) => coin.marketCap);
@@ -271,6 +271,7 @@ function Coins() {
 															rank: coin.rank,
 															icon: coin.icon,
 															symbol: coin.symbol,
+															price: coin.price,
 														},
 													}}
 												>
