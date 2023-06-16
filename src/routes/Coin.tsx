@@ -3,6 +3,7 @@ import { Mobile, PC } from "../styles/MediaQuery";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { ICoin, formatCurrency } from "./Coins";
+import Chart from "./Chart";
 
 const Wrapper = styled.div`
 	margin: 0 auto;
@@ -85,6 +86,7 @@ interface RouteState {
 	icon: string;
 	symbol: string;
 	price: number;
+	priceChange1d: number;
 }
 
 function Coin() {
@@ -156,6 +158,11 @@ function Coin() {
 							</>
 						)}
 					</Container>
+					<Chart
+						coinId={coin?.id + ""}
+						price={Number(coin?.price)}
+						priceChange1d={Number(coin?.priceChange1d)}
+					/>
 				</Wrapper>
 			</PC>
 			<Mobile></Mobile>
