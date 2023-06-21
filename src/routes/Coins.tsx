@@ -272,6 +272,7 @@ function Coins() {
 															icon: coin.icon,
 															symbol: coin.symbol,
 															price: coin.price,
+															priceChange1d: coin.priceChange1d,
 														},
 													}}
 												>
