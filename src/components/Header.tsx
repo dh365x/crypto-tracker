@@ -78,7 +78,7 @@ function Header() {
 					<Item>Cryptocurrencies</Item>
 				</Link>
 				<Item>
-					<Link to="/">Blog</Link>
+					<Link to="/news">News</Link>
 				</Item>
 			</Container>
 			<Container>
