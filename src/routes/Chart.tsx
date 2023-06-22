@@ -66,6 +66,7 @@ function Chart({ coinId }: IProps) {
 								},
 								background: "transparent",
 							},
+							colors: ["#ff9223"],
 							grid: { show: false },
 							stroke: {
 								curve: "straight",

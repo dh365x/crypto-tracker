@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { ICoin, formatCurrency } from "./Coins";
 import Chart from "./Chart";
-import { UpDownArrow } from "../assets/Svgs";
+import { UpDownArrow } from "../assets/navigation";
 
 const Wrapper = styled.div`
 	margin: 0 auto;

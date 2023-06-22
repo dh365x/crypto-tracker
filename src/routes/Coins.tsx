@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Mobile, PC } from "../styles/MediaQuery";
 import CoinsMoblie from "./CoinsMoblie";
 import { useEffect, useState } from "react";
-import { UpDownArrow } from "../assets/Svgs";
+import { UpDownArrow } from "../assets/navigation";
 import { Link } from "react-router-dom";
 
 const Wrapper = styled.div`

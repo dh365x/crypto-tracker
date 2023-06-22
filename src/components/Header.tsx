@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { SearchSvg, SettingSvg, UserSvg } from "../assets/Svgs";
+import { SearchSvg, SettingSvg, UserSvg } from "../assets/navigation";
 
 const Wrapper = styled.nav`
 	position: relative;
