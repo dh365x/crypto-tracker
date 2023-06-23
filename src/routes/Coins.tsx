@@ -7,6 +7,7 @@ import { ICoins } from "../types";
 import { useQuery } from "@tanstack/react-query";
 import { getCoins } from "../api";
 import { formatCurrency } from "../utils";
+import Loading from "../Loading";
 
 const Wrapper = styled.div`
 	margin-top: 25px;
@@ -47,24 +48,19 @@ const StatsList = styled.div`
 		width: 30%;
 		padding: 10px;
 		border-radius: 10px;
-		background-color: ${(props) => props.theme.gray.lighter};
+		background-color: rgba(255, 153, 50, 0.1);
+		border: 1px solid #ff9332;
 	}
 	p {
 		padding: 10px;
 		margin-bottom: 5px;
-		color: #4c4c4c;
-		font-weight: 300;
+		color: #ff9332;
 	}
 	span {
 		font-size: 22px;
-		font-weight: 700;
+		font-weight: 500;
 		padding-left: 10px;
 	}
-`;
-
-const Loader = styled.span`
-	display: block;
-	text-align: center;
 `;
 
 const Table = styled.table`
@@ -187,7 +183,7 @@ function Coins() {
 		<>
 			<PC>
 				{isLoading ? (
-					<Loader>Loading...</Loader>
+					<Loading />
 				) : (
 					<Wrapper>
 						<Container>

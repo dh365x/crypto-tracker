@@ -7,6 +7,7 @@ import Chart from "./Chart";
 import { UpDownArrow } from "../assets/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getCoin } from "../api";
+import Loading from "../Loading";
 
 const Wrapper = styled.div`
 	margin: 0 auto;
@@ -101,24 +102,30 @@ const Box = styled.div<{ widthh: number }>`
 `;
 
 const MarketStats = styled.div`
-	padding: 30px;
+	display: flex;
+	flex-direction: column;
+	padding: 0 30px;
+	height: 100%;
 	border: 1px solid #f2f2f2;
 	border-radius: 24px;
 	div {
-		span {
-			font-size: 16px;
-			color: #8c8c8c;
-		}
-		p {
-			margin-top: 10px;
-			color: "#333333";
-			font-size: 20px;
-			font-weight: 500;
-			line-height: 28px;
-		}
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+	}
+	p:first-child {
+		color: #8c8c8c;
+		font-size: 16px;
+		font-weight: 400;
+	}
+	p {
+		margin-top: 8px;
+		color: "#333333";
+		font-size: 20px;
+		line-height: 20px;
 	}
 	hr {
-		margin: 30px 0;
 		border-top: 1px solid #f2f2f2;
 	}
 `;
@@ -148,7 +155,7 @@ function Coin() {
 	return (
 		<>
 			{isLoading ? (
-				<span>Loading...</span>
+				<Loading />
 			) : (
 				<>
 					<PC>
@@ -181,27 +188,27 @@ function Coin() {
 									<Title>Market Stats</Title>
 									<MarketStats>
 										<div>
-											<span>Market Cap</span>
+											<p>Market Cap</p>
 											<p>{marketCap}</p>
 										</div>
 										<hr />
 										<div>
-											<span>Fully Diluted Valuation</span>
+											<p>Fully Diluted Valuation</p>
 											<p>{FullyDilutedValue}</p>
 										</div>
 										<hr />
 										<div>
-											<span>Circulating Supply</span>
+											<p>Circulating Supply</p>
 											<p>{availbleSupply}</p>
 										</div>
 										<hr />
 										<div>
-											<span>Total Supply</span>
+											<p>Total Supply</p>
 											<p>{totalSupply}</p>
 										</div>
 										<hr />
 										<div>
-											<span>Volume</span>
+											<p>Volume</p>
 											<p>{volume}</p>
 										</div>
 									</MarketStats>

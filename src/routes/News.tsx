@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { INews } from "../types";
 import { useQuery } from "@tanstack/react-query";
 import { getNews } from "../api";
+import Loading from "../Loading";
 
 const Wrapper = styled.div`
 	display: flex;
@@ -63,7 +64,7 @@ function News() {
 	return (
 		<Wrapper>
 			{isLoading ? (
-				<span>Loading...</span>
+				<Loading />
 			) : (
 				<Header>
 					<Title>News</Title>

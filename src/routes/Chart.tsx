@@ -3,6 +3,7 @@ import ReactApexChart from "react-apexcharts";
 import { ICharts, RouteParams } from "../types";
 import { useQuery } from "@tanstack/react-query";
 import { getCharts } from "../api";
+import Loading from "../Loading";
 
 const ChartBox = styled.div`
 	padding: 30px;
@@ -28,7 +29,7 @@ function Chart({ coinId }: RouteParams) {
 	return (
 		<>
 			{isLoading ? (
-				<span>Loading...</span>
+				<Loading />
 			) : (
 				<ChartBox>
 					<ReactApexChart
