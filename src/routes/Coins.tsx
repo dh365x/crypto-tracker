@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import { Mobile, PC } from "../styles/MediaQuery";
 import CoinsMoblie from "./CoinsMoblie";
-import { useEffect, useState } from "react";
 import { UpDownArrow } from "../assets/navigation";
 import { Link } from "react-router-dom";
+import { ICoins } from "../types";
+import { useQuery } from "@tanstack/react-query";
+import { getCoins } from "../api";
 
 const Wrapper = styled.div`
 	margin-top: 25px;
@@ -139,23 +141,6 @@ const Change24h = styled.div<{ percent: number }>`
 	}
 `;
 
-export interface ICoin {
-	id: string;
-	icon: string;
-	name: string;
-	symbol: string;
-	rank: number;
-	price: number;
-	priceBtc: number;
-	volume: number;
-	marketCap: number;
-	availableSupply: number;
-	totalSupply: number;
-	priceChange1h: number;
-	priceChange1d: number;
-	priceChange1w: number;
-}
-
 export const formatCurrency = (value: number) => {
 	const billion: number = 1000000000;
 	if (value >= billion) {
@@ -166,53 +151,50 @@ export const formatCurrency = (value: number) => {
 };
 
 function Coins() {
-	const [coins, setCoins] = useState<ICoin[]>([]);
-	const [loading, setLoading] = useState(true);
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					`https://api.coinstats.app/public/v1/coins?skip=0&limit=30`
-				);
-				const json = await response.json();
-				setCoins(json.coins);
-				setLoading(false);
-			} catch (error) {
-				console.log("Error fetching data:", error);
-				setLoading(false);
-			}
-		};
-		fetchData();
-	}, []);
+	const { data, isLoading } = useQuery<ICoins>(["coins"], getCoins);
 
 	const makeMarketCap = () => {
-		const arr: number[] = coins.map((coin) => coin.marketCap);
-		const sum: number = arr.reduce((acc, curr) => acc + curr, 0);
-		return sum;
+		const values: number[] | undefined = data?.coins.map(
+			(coin) => coin.marketCap
+		);
+		const sum: number | undefined = values?.reduce(
+			(acc, curr) => acc + curr,
+			0
+		);
+		return sum?.toLocaleString();
 	};
-	const totalMarketCap = makeMarketCap();
 
 	const makeVolume24h = () => {
-		const arr: number[] = coins.map((coin) => coin.volume);
-		const sum: number = arr.reduce((acc, curr) => acc + curr, 0);
-		return sum;
-	};
-	const totalVolume24h = makeVolume24h();
-
-	const findBtcMarketCap = () => {
-		const pickBtc: ICoin | undefined = coins.find(
-			(coin) => coin.id === "bitcoin"
+		const values: number[] | undefined = data?.coins.map((coin) => coin.volume);
+		const sum: number | undefined = values?.reduce(
+			(acc, curr) => acc + curr,
+			0
 		);
-		const percent: number = (Number(pickBtc?.marketCap) / totalMarketCap) * 100;
-		return percent;
+		return sum?.toLocaleString();
 	};
-	const btcDominance = findBtcMarketCap();
+
+	const makeBtcDominance = () => {
+		const allValue: number | undefined = data?.coins
+			.map((coin) => coin.marketCap)
+			.reduce((acc, curr) => acc + curr, 0);
+		const btcValue: number | undefined = data?.coins.find(
+			(coin) => coin.id === "bitcoin"
+		)?.marketCap;
+
+		if (btcValue !== undefined && allValue !== undefined) {
+			const dominance: number = (btcValue / allValue) * 100;
+			return dominance.toFixed(1);
+		}
+	};
+
+	const totalMarketCap: string | undefined = makeMarketCap();
+	const totalVolume24h: string | undefined = makeVolume24h();
+	const btcDominance: string | undefined = makeBtcDominance();
 
 	return (
 		<>
 			<PC>
-				{loading ? (
+				{isLoading ? (
 					<Loader>Loading...</Loader>
 				) : (
 					<Wrapper>
@@ -233,15 +215,15 @@ function Coins() {
 							<StatsList>
 								<div>
 									<p>Market Cap</p>
-									<span>${totalMarketCap.toLocaleString()}</span>
+									<span>${totalMarketCap}</span>
 								</div>
 								<div>
 									<p>Volume 24h</p>
-									<span>${totalVolume24h.toLocaleString()}</span>
+									<span>${totalVolume24h}</span>
 								</div>
 								<div>
 									<p>BTC Dominance</p>
-									<span>{btcDominance.toFixed(1)}%</span>
+									<span>{btcDominance}%</span>
 								</div>
 							</StatsList>
 						</Container>
@@ -259,7 +241,7 @@ function Coins() {
 									</tr>
 								</thead>
 								<tbody>
-									{coins.map((coin) => (
+									{data?.coins.map((coin) => (
 										<tr key={coin.id}>
 											<td id="rank">{coin.rank}</td>
 											<td id="name" className="leftAlign">

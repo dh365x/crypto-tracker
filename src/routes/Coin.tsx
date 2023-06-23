@@ -1,10 +1,12 @@
 import { useLocation, useParams } from "react-router-dom";
 import { Mobile, PC } from "../styles/MediaQuery";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import { ICoin, formatCurrency } from "./Coins";
+import { formatCurrency } from "./Coins";
+import { ICoin, RouteParams, RouteState } from "../types";
 import Chart from "./Chart";
 import { UpDownArrow } from "../assets/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getCoin } from "../api";
 
 const Wrapper = styled.div`
 	margin: 0 auto;
@@ -121,48 +123,31 @@ const MarketStats = styled.div`
 	}
 `;
 
-interface RouteParams {
-	coinId: string;
-}
-interface RouteState {
-	name: string;
-	rank: number;
-	icon: string;
-	symbol: string;
-	price: number;
-	priceChange1d: number;
-}
-
 function Coin() {
-	const [coin, setCoin] = useState<ICoin>();
-	const [loading, setLoading] = useState(true);
-
 	const { coinId } = useParams<RouteParams>();
 	const { state } = useLocation<RouteState>();
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					`https://api.coinstats.app/public/v1/coins/${coinId}?currency=AMD`
-				);
-				const json = await response.json();
-				setCoin(json.coin);
-			} catch (error) {
-				console.log("Error fetching data:", error);
-			}
-			setLoading(false);
-		};
-		fetchData();
-	}, [coinId]);
+	const { data, isLoading } = useQuery<ICoin>([`coin`, `coin_${coinId}`], () =>
+		getCoin(coinId)
+	);
 
-	const marketCap = formatCurrency(state.price * Number(coin?.availableSupply));
-	const FDValue = formatCurrency(state.price * Number(coin?.totalSupply));
-	const volume = formatCurrency(Number(coin?.volume));
+	const marketCap: string = formatCurrency(
+		state.price * Number(data?.coin.availableSupply)
+	);
+	const availbleSupply: string | undefined =
+		data?.coin.availableSupply.toLocaleString();
+
+	const totalSupply: string | undefined =
+		data?.coin.totalSupply.toLocaleString();
+
+	const FullyDilutedValue: string = formatCurrency(
+		state.price * Number(data?.coin.totalSupply)
+	);
+	const volume = formatCurrency(Number(data?.coin.volume));
 
 	return (
 		<>
-			{loading ? (
+			{isLoading ? (
 				<span>Loading...</span>
 			) : (
 				<>
@@ -202,17 +187,17 @@ function Coin() {
 										<hr />
 										<div>
 											<span>Fully Diluted Valuation</span>
-											<p>${FDValue}</p>
+											<p>${FullyDilutedValue}</p>
 										</div>
 										<hr />
 										<div>
 											<span>Circulating Supply</span>
-											<p>{coin?.availableSupply}</p>
+											<p>{availbleSupply}</p>
 										</div>
 										<hr />
 										<div>
 											<span>Total Supply</span>
-											<p>{coin?.totalSupply}</p>
+											<p>{totalSupply}</p>
 										</div>
 										<hr />
 										<div>
