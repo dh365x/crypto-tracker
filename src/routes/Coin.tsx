@@ -1,7 +1,7 @@
 import { useLocation, useParams } from "react-router-dom";
 import { Mobile, PC } from "../styles/MediaQuery";
 import styled from "styled-components";
-import { formatCurrency } from "./Coins";
+import { formatCurrency } from "../utils";
 import { ICoin, RouteParams, RouteState } from "../types";
 import Chart from "./Chart";
 import { UpDownArrow } from "../assets/navigation";
@@ -182,12 +182,12 @@ function Coin() {
 									<MarketStats>
 										<div>
 											<span>Market Cap</span>
-											<p>${marketCap}</p>
+											<p>{marketCap}</p>
 										</div>
 										<hr />
 										<div>
 											<span>Fully Diluted Valuation</span>
-											<p>${FullyDilutedValue}</p>
+											<p>{FullyDilutedValue}</p>
 										</div>
 										<hr />
 										<div>

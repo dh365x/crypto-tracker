@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { ICoins } from "../types";
 import { useQuery } from "@tanstack/react-query";
 import { getCoins } from "../api";
+import { formatCurrency } from "../utils";
 
 const Wrapper = styled.div`
 	margin-top: 25px;
@@ -141,15 +142,6 @@ const Change24h = styled.div<{ percent: number }>`
 	}
 `;
 
-export const formatCurrency = (value: number) => {
-	const billion: number = 1000000000;
-	if (value >= billion) {
-		const bValue: number = value / billion;
-		return `${bValue.toFixed(1)}B`;
-	}
-	return value.toLocaleString();
-};
-
 function Coins() {
 	const { data, isLoading } = useQuery<ICoins>(["coins"], getCoins);
 
@@ -273,12 +265,12 @@ function Coins() {
 											</td>
 											<td id="price" className="rightAlign">
 												<span className="fontStyle">
-													${formatCurrency(coin.price)}
+													{formatCurrency(coin.price)}
 												</span>
 											</td>
 											<td id="bitcoinPrice">{coin.priceBtc.toFixed(7)}</td>
-											<td id="marketCap">${formatCurrency(coin.marketCap)}</td>
-											<td id="volume24h">${formatCurrency(coin.volume)}</td>
+											<td id="marketCap">{formatCurrency(coin.marketCap)}</td>
+											<td id="volume24h">{formatCurrency(coin.volume)}</td>
 										</tr>
 									))}
 								</tbody>
