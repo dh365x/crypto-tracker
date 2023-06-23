@@ -50,3 +50,27 @@ export interface RouteState {
 	price: number;
 	priceChange1d: number;
 }
+
+// Chart
+export interface ICharts {
+	chart: number[];
+}
+
+// News
+export interface INews {
+	news: [
+		{
+			id: string;
+			feedDate: number;
+			source: string;
+			title: string;
+			isFeatured: boolean;
+			description: string;
+			imgURL: string;
+			link: string;
+			sourceLink: string;
+			shareURL: string;
+			relatedCoins: string[];
+		}
+	];
+}

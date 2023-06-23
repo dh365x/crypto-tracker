@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { INews } from "../types";
+import { useQuery } from "@tanstack/react-query";
+import { getNews } from "../api";
 
 const Wrapper = styled.div`
 	display: flex;
@@ -55,53 +57,18 @@ const Box = styled.div<{ bg: string }>`
 	}
 `;
 
-interface INews {
-	news: [
-		{
-			id: string;
-			feedDate: number;
-			source: string;
-			title: string;
-			isFeatured: boolean;
-			description: string;
-			imgURL: string;
-			link: string;
-			sourceLink: string;
-			shareURL: string;
-			relatedCoins: string[];
-		}
-	];
-}
-
 function News() {
-	const [newsData, setNewsData] = useState<INews>();
-	const [loading, setLoading] = useState(true);
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(
-					`https://api.coinstats.app/public/v1/news?skip=0&limit=15`
-				);
-				const json = await response.json();
-				setNewsData(json);
-			} catch (error) {
-				console.log("Error fetching data:", error);
-			}
-			setLoading(false);
-		};
-		fetchData();
-	}, []);
+	const { data, isLoading } = useQuery<INews>([`news`], getNews);
 
 	return (
 		<Wrapper>
-			{loading ? (
+			{isLoading ? (
 				<span>Loading...</span>
 			) : (
 				<Header>
 					<Title>News</Title>
 					<Row>
-						{newsData?.news.map((news) => (
+						{data?.news.map((news) => (
 							<a href={news.link} key={news.id}>
 								<Box bg={news.imgURL}>
 									<div>{news.title}</div>

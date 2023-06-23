@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ReactApexChart from "react-apexcharts";
+import { ICharts, RouteParams } from "../types";
+import { useQuery } from "@tanstack/react-query";
+import { getCharts } from "../api";
 
 const ChartBox = styled.div`
 	padding: 30px;
@@ -8,46 +10,24 @@ const ChartBox = styled.div`
 	border-radius: 24px;
 `;
 
-interface IProps {
-	coinId: string;
-}
-
-interface IHistorical {
-	chart: number[];
-}
-
-function Chart({ coinId }: IProps) {
-	const [chartData, setChartData] = useState<IHistorical>();
-	const [loading, setLoading] = useState(true);
-
-	useEffect(() => {
-		const fetchData = async (coinId: string) => {
-			try {
-				const response = await fetch(
-					`https://api.coinstats.app/public/v1/charts?period=1w&coinId=${coinId}`
-				);
-				const json = await response.json();
-				setChartData(json);
-			} catch (error) {
-				console.log("Error fetching data:", error);
-			}
-			setLoading(false);
-		};
-		fetchData(coinId);
-	}, [coinId]);
+function Chart({ coinId }: RouteParams) {
+	const { data, isLoading } = useQuery<ICharts>(
+		[`chart`, `chart_${coinId}`],
+		() => getCharts(coinId)
+	);
 
 	const yaxisLabel = (value: number) => {
 		return `$${value.toLocaleString()}`;
 	};
 	const xaxisLabel = (timestamp: string) => {
-		const date = new Date(parseInt(timestamp) * 1000);
-		const formettedDate = date.toLocaleDateString("en-US");
+		const date: Date = new Date(parseInt(timestamp) * 1000);
+		const formettedDate: string = date.toLocaleDateString("en-US");
 		return `${formettedDate}`;
 	};
 
 	return (
 		<>
-			{loading ? (
+			{isLoading ? (
 				<span>Loading...</span>
 			) : (
 				<ChartBox>
@@ -56,7 +36,7 @@ function Chart({ coinId }: IProps) {
 						series={[
 							{
 								name: "Price",
-								data: chartData?.chart.map((price) => price) ?? [],
+								data: data?.chart.map((price) => price) ?? [],
 							},
 						]}
 						options={{
